@@ -1,42 +1,108 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.titleToDo {
+  height: 90px;
+  font-size: 29px;
   text-align: center;
+  font-family: monospace;
+  font-weight: bold;
+  background-color: lemonchiffon;
+
+   /* Center the content using Flexbox */
+   display: flex;
+   justify-content: center; /* Horizontal center */
+   align-items: center;     /* Vertical center */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.inputContainer {
+  height: 150px;
+
+  /* Center the content using Flexbox */
+  display: flex;
+  justify-content: center; /* Horizontal center */
+  align-items: center;     /* Vertical center */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.inputField {                     
+  padding: 10px 15px;             
+  font-size: 16px;                
+  border: 3px solid lavender;        
+  border-radius: 6px;             
+  outline: none;                  
+  transition: border-color 0.3s;
+  width: 450px;
+  height: 17px;
+  margin-right: 12px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.inputField:focus {
+  border-color: lavenderblush;
 }
 
-.card {
-  padding: 2em;
+.editInputField {
+  padding: 10px 15px;             
+  font-size: 16px;                
+  border: 3px solid lavenderblush;        
+  border-radius: 6px;             
+  outline: none;                  
+  transition: border-color 0.3s;
+  width: 260px;
+  height: 25px;
+  margin-right: 6px;
 }
 
-.read-the-docs {
-  color: #888;
+.inputButton {
+  background-color: lavender;
+  width: 70px;
+  height: 40px;
+  border-radius: 6px;
+  border-color: whitesmoke;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.inputButton:hover {
+  background-color: lavenderblush;
+}
+
+.toDoListContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.toDoItemContainer {
+  display: flex;
+  flex-direction: row;
+
+  /* Center the content using Flexbox */
+  align-items: center;     /* Vertical center */
+  border-radius: 16px;
+  border: dashed 3px rgb(236, 236, 236);
+  width: 500px;
+  height: 50px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+}
+
+.myToDoItem {
+  font-size: 16px;
+  font-family: monospace;
+  width: 300px;
+}
+
+.toDoButton {
+  background-color: lavenderblush;
+  width: 100px;
+  height: 50px;
+  border-radius: 6px;
+  border-color: whitesmoke;
+  font-family: monospace;
+  font-size: 14px;
+  margin: 2px;
 }

@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './App.css';
+import { TodoProvider, useTodo } from './context/TodoContext'; // Context import
+import ToDoItem from './components/ToDoItem';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { toDoList, input, setInput, addToDo } = useTodo();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="appContainer">
+      <h1 className="titleToDo">🍄 June's todoList 🍄</h1>
+      <div className="inputContainer">
+        <input
+          className="inputField"
+          placeholder="할 일이 무엇이다냥 😺"
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)} // Update input value
+        />
+        <button className="inputButton" onClick={addToDo}>
+          등록
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <div className="toDoListContainer">
+        {toDoList.map((todo) => (
+          <ToDoItem key={todo.id} todo={todo} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default function WrappedApp() {
+  return (
+    <TodoProvider>
+      <App />
+    </TodoProvider>
+  );
+}

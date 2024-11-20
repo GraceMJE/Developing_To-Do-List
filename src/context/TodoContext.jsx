@@ -1,4 +1,3 @@
-// TodoContext.js
 import React, { createContext, useContext, useState } from 'react';
 
 // TodoContext 생성
@@ -8,12 +7,25 @@ const TodoContext = createContext();
 export function TodoProvider({ children }) {
   const [toDoList, setToDoList] = useState([]);
   const [input, setInput] = useState('');
+  const [idCounter, setIdCounter] = useState(1); // 초기값 1로 설정
 
   // Add a new to-do item
   const addToDo = () => {
     if (input.trim() === '') return; // Prevent adding empty to-dos
-    setToDoList([...toDoList, { id: Date.now(), text: input, completed: false }]);
-    setInput(''); // Clear the input field after adding
+
+    // 새로운 할 일 추가
+    setToDoList([
+      ...toDoList,
+      {
+        id: idCounter, // idCounter 값 사용
+        text: input,
+        completed: false,
+        date: new Date().toLocaleString(), // 현재 날짜 추가
+      },
+    ]);
+
+    setIdCounter(idCounter + 1); // 다음 할 일의 ID를 증가
+    setInput(''); // 입력 필드 초기화
   };
 
   // Delete a to-do item by ID

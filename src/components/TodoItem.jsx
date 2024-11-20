@@ -1,61 +1,66 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { useTodo } from '../context/TodoContext'; // useTodo 훅 import
+import { useNavigate } from 'react-router-dom';
+import { useTodo } from '../context/TodoContext';
 
 function ToDoItem({ todo }) {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(todo.text);
 
-  const { deleteToDo, editToDo, toggleComplete } = useTodo(); // Context에서 함수들 가져오기
+  const { deleteToDo, editToDo, toggleComplete } = useTodo();
 
-  // Handle changes in the input field during editing
   const handleInputChange = (event) => {
-    setEditedText(event.target.value); // Update the editedText state
+    setEditedText(event.target.value);
   };
 
   const handleEditClick = () => {
     if (isEditing && editedText.trim() !== '') {
-      editToDo(todo.id, editedText); // Save the edited todo
+      editToDo(todo.id, editedText);
     }
-    setIsEditing(!isEditing); // Toggle edit mode
+    setIsEditing(!isEditing);
   };
 
   const handleDeleteClick = () => {
-    deleteToDo(todo.id); // Delete the todo item
+    deleteToDo(todo.id);
   };
 
   const handleCheckboxChange = (event) => {
-    toggleComplete(todo.id, event.target.checked); // Update completion status in parent component
+    toggleComplete(todo.id, event.target.checked);
+  };
+
+  const handleDetailClick = () => {
+    navigate(`/todo/${todo.id}`); // Navigate to detail page
   };
 
   return (
-    <div className="toDoItemContainer">
+    <div className="toDoItemContainer" onClick={handleDetailClick}>
       <input
         type="checkbox"
-        checked={todo.completed} // Use the completed state to check/uncheck
+        checked={todo.completed}
         onChange={handleCheckboxChange}
+        onClick={(e) => e.stopPropagation()} // Prevent checkbox click from triggering navigation
       />
       {isEditing ? (
         <input
           className="editInputField"
           type="text"
           value={editedText}
-          onChange={handleInputChange} // Update the edited text as user types
+          onChange={handleInputChange}
           autoFocus
         />
       ) : (
         <span
           className="myToDoItem"
-          style={{ textDecoration: todo.completed ? 'line-through' : 'none' }} // Apply line-through if completed
+          style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
         >
           {todo.text}
         </span>
       )}
-
-      <button className="toDoButton" onClick={handleEditClick}>
+      <button className="toDoButton" onClick={(e) => { e.stopPropagation(); handleEditClick(); }}>
         {isEditing ? '수정완료' : '수정'}
       </button>
-      <button className="toDoButton" onClick={handleDeleteClick}>
+      <button className="toDoButton" onClick={(e) => { e.stopPropagation(); handleDeleteClick(); }}>
         미션 complete
       </button>
     </div>

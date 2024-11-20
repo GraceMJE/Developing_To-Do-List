@@ -79,6 +79,7 @@
 .toDoItemContainer {
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 
   /* Center the content using Flexbox */
   align-items: center;     /* Vertical center */

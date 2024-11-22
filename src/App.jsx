@@ -1,23 +1,58 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useQuery } from "@tanstack/react-query";
-import { getTodoList } from "./apis/todo"; // 실제 파일 경로를 확인하세요.
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteTodoItem, getTodoList, patchTodo, postTodo } from "./apis/todo";
+import { queryClient } from "./main";
 
 function App() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [search, setSearch] = useState("");
 
-  // React Query로 todo 리스트를 가져옵니다.
   const { data: todos, isLoading } = useQuery({
     queryFn: () => getTodoList({ title: search }),
     queryKey: ["todos", search],
   });
 
+  const {mutate:postTodoMutation} = useMutation({
+    mutationFn: postTodo,
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ['todos'],
+      })
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onSettled: () => {
+      console.log('항상 실행됨');
+    },
+  });
+
+  const {mutate: deleteTodoMutation} = useMutation({
+    mutationFn: deleteTodoItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey:['todos'],
+      })
+    }
+  });
+
+  const {mutate: patchTodoMutation} = useMutation({
+    mutationFn: patchTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['todos'],
+      })
+    }
+  })
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Title:", title);
     console.log("Content:", content);
+    postTodoMutation({title, content});
   };
 
   return (
@@ -49,11 +84,17 @@ function App() {
         <Container>
           {todos?.[0]?.map((todo) => (
             <TodoContainer key={todo.id}>
-              <input type='checkbox' checked={todo.checked} />
+              <input 
+                type='checkbox' 
+                defaultChecked={todo.checked} 
+                onChange={(e) => 
+                  patchTodoMutation({id: todo.id, checked: !todo.checked})}
+              />
               <div>
                 <p>{todo.title}</p>
                 <p>{todo.content}</p>
               </div>
+              <button onClick={() => deleteTodoMutation({id: todo.id})}>삭제하기</button>
             </TodoContainer>
           ))}
         </Container>

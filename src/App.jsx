@@ -1,54 +1,96 @@
-import { useState } from 'react';
-import './App.css';
-import styled from 'styled-components';
+import { useState } from "react";
+import styled from "styled-components";
+import { useQuery } from "@tanstack/react-query";
+import { getTodoList } from "./apis/todo"; // 실제 파일 경로를 확인하세요.
 
 function App() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [search, setSearch] = useState("");
+
+  // React Query로 todo 리스트를 가져옵니다.
+  const { data: todos, isLoading } = useQuery({
+    queryFn: () => getTodoList({ title: search }),
+    queryKey: ["todos", search],
+  });
 
   const handleSubmit = (e) => {
-    // 새로고침 방지
     e.preventDefault();
-    console.log(title, content);
-  }
+    console.log("Title:", title);
+    console.log("Content:", content);
+  };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {/* 추적을 위해 value를 값변경을 위해 onChange를 넘겨줌 
-      e.target.value를 해주면 값이 변경될때마다 value값에 반영됨*/}
+    <>
+      <h1> Todo 검색 </h1>
       <Input 
-        name='title'
-        placeholder='할 일 제목이 뭐다냥 😺'
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        style={{marginBottom: '10px'}} 
+        value={search} 
+        onChange={(e) => setSearch(e.target.value)}
       />
-      <Input 
-        name='content'
-        placeholder='할 일 내용이 뭐다냥 😸'
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <Button type='submit'>투두 생성</Button>
-    </Form>
-  )
+      <Form onSubmit={handleSubmit}>
+        <Input
+          name="title"
+          placeholder="할 일 제목이 뭐다냥 😺"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Input
+          name="content"
+          placeholder="할 일 내용이 뭐다냥 😸"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <Button type="submit">투두 생성</Button>
+      </Form>
+      {isLoading ? (
+        <div>로딩 중입니다...</div>
+      ) : (
+        <Container>
+          {todos?.[0]?.map((todo) => (
+            <TodoContainer key={todo.id}>
+              <input type='checkbox' checked={todo.checked} />
+              <div>
+                <p>{todo.title}</p>
+                <p>{todo.content}</p>
+              </div>
+            </TodoContainer>
+          ))}
+        </Container>
+      )}
+    </>
+  );
 }
 
 export default App;
 
+// Styled Components
 const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const Input = styled.input`
-    padding: 10px;
-    border: 1px solid purple;
-    border-radius: 20px;
+  padding: 10px;
+  border: 1px solid purple;
+  border-radius: 20px;
 `;
 
 const Button = styled.button`
-    border-radius: 10px;
-    border: none;
-    padding: 20px;
+  border-radius: 10px;
+  border: none;
+  padding: 20px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const TodoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
 `;

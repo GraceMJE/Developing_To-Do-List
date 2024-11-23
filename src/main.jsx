@@ -1,4 +1,4 @@
-import './index.css'; // Global styles
+import './App.css'; // Global styles
 import React from 'react'; // React library
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
